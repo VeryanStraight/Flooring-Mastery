@@ -1,6 +1,7 @@
 package com.veryan.FlooringMastery.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 public class Order implements model {
@@ -8,16 +9,22 @@ public class Order implements model {
     public final String customerName;
     public final Tax tax;
     public final Product product;
-    public final double area;
+    public final BigDecimal area;
     public final BigDecimal costPerSquareFoot;
     public final BigDecimal laborCostPerSquareFoot;
     public final BigDecimal materialCost;
-    public final BigDecimal laborCostTax;
+    public final BigDecimal laborCost;
     public final BigDecimal taxTotal;
     public final BigDecimal total;
 
     public Order(LocalDate date, String customerName, Tax tax, Product product,
-                 double area, BigDecimal costPerSquareFoot, BigDecimal laborCostPerSquareFoot, BigDecimal materialCost, BigDecimal laborCostTax, BigDecimal taxTotal, BigDecimal total) {
+                 BigDecimal area, BigDecimal costPerSquareFoot, BigDecimal laborCostPerSquareFoot) {
+
+        this.materialCost = costPerSquareFoot.multiply(area);
+        this.laborCost = laborCostPerSquareFoot.multiply(area);
+        this.taxTotal = materialCost.add(laborCost).multiply(tax.taxRate.divide(new BigDecimal(100), RoundingMode.HALF_UP));
+        this.total = materialCost.add(laborCost).add(taxTotal);
+
         this.date = date;
         this.customerName = customerName;
         this.tax = tax;
@@ -25,10 +32,6 @@ public class Order implements model {
         this.area = area;
         this.costPerSquareFoot = costPerSquareFoot;
         this.laborCostPerSquareFoot = laborCostPerSquareFoot;
-        this.materialCost = materialCost;
-        this.laborCostTax = laborCostTax;
-        this.taxTotal = taxTotal;
-        this.total = total;
     }
 
     @Override
@@ -43,7 +46,7 @@ public class Order implements model {
                 ", CostPerSquareFoot=" + costPerSquareFoot +
                 ", LaborCostPerSquareFoot=" + laborCostPerSquareFoot +
                 ", MaterialCost=" + materialCost +
-                ", LaborCostTax=" + laborCostTax +
+                ", LaborCostTax=" + laborCost +
                 ", TaxTotal=" + taxTotal +
                 ", Total=" + total +
                 '}';
@@ -58,7 +61,7 @@ public class Order implements model {
                 "," + costPerSquareFoot +
                 "," + laborCostPerSquareFoot +
                 "," + materialCost +
-                "," + laborCostTax +
+                "," + laborCost +
                 "," + taxTotal +
                 "," + total;
     }
