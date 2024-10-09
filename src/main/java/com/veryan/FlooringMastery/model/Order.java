@@ -5,30 +5,29 @@ import java.time.LocalDate;
 
 public class Order implements model {
     public final LocalDate date;
-    public final int orderNumber;
     public final String customerName;
-    public final State state;
-    public final BigDecimal taxRate;
-    public final ProductType productType;
+    public final Tax tax;
+    public final Product product;
     public final double area;
     public final BigDecimal costPerSquareFoot;
     public final BigDecimal laborCostPerSquareFoot;
     public final BigDecimal materialCost;
     public final BigDecimal laborCostTax;
+    public final BigDecimal taxTotal;
     public final BigDecimal total;
 
-    public Order(LocalDate date, int orderNumber, String customerName, State state, BigDecimal taxRate, ProductType productType, double area, BigDecimal costPerSquareFoot, BigDecimal laborCostPerSquareFoot, BigDecimal materialCost, BigDecimal laborCostTax, BigDecimal total) {
+    public Order(LocalDate date, String customerName, Tax tax, Product product,
+                 double area, BigDecimal costPerSquareFoot, BigDecimal laborCostPerSquareFoot, BigDecimal materialCost, BigDecimal laborCostTax, BigDecimal taxTotal, BigDecimal total) {
         this.date = date;
-        this.orderNumber = orderNumber;
         this.customerName = customerName;
-        this.state = state;
-        this.taxRate = taxRate;
-        this.productType = productType;
+        this.tax = tax;
+        this.product = product;
         this.area = area;
         this.costPerSquareFoot = costPerSquareFoot;
         this.laborCostPerSquareFoot = laborCostPerSquareFoot;
         this.materialCost = materialCost;
         this.laborCostTax = laborCostTax;
+        this.taxTotal = taxTotal;
         this.total = total;
     }
 
@@ -36,31 +35,31 @@ public class Order implements model {
     public String toString() {
         return "Orders{" +
                 "Date=" + date +
-                "OrderNumber=" + orderNumber +
                 ", CustomerName='" + customerName + '\'' +
-                ", State='" + state + '\'' +
-                ", TaxRate=" + taxRate +
-                ", ProductType='" + productType + '\'' +
+                ", State='" + tax.state + '\'' +
+                ", TaxRate=" + tax.taxRate +
+                ", ProductType='" + product.productType + '\'' +
                 ", Area='" + area + '\'' +
                 ", CostPerSquareFoot=" + costPerSquareFoot +
                 ", LaborCostPerSquareFoot=" + laborCostPerSquareFoot +
                 ", MaterialCost=" + materialCost +
                 ", LaborCostTax=" + laborCostTax +
+                ", TaxTotal=" + taxTotal +
                 ", Total=" + total +
                 '}';
     }
 
     public String toCSV(){
-        return orderNumber +
-                ","+ customerName +
-                "," + state +
-                "," + taxRate +
-                "," + productType +
+        return customerName +
+                "," + tax.state +
+                "," + tax.taxRate +
+                "," + product.productType +
                 "," + area +
                 "," + costPerSquareFoot +
                 "," + laborCostPerSquareFoot +
                 "," + materialCost +
                 "," + laborCostTax +
+                "," + taxTotal +
                 "," + total;
     }
 }
