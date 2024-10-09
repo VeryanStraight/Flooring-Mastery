@@ -16,9 +16,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class AccessData implements dao{
-    HashMap<LocalDate, ArrayList<Order>> orders = new HashMap<>();
-    HashMap<String, Tax> taxes = new HashMap<>();
-    HashMap<String, Product> products = new HashMap<>();
+    private final HashMap<LocalDate, ArrayList<Order>> orders = new HashMap<>();
+    private final HashMap<String, Tax> taxes = new HashMap<>();
+    private final HashMap<String, Product> products = new HashMap<>();
+    private String filePath = "src/main/resources";
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
 
@@ -26,6 +27,13 @@ public class AccessData implements dao{
     AccessData() throws FileException{
         loadData();
     }
+
+    AccessData(String filePath) throws FileException {
+        this.filePath = filePath;
+        System.out.println("Current working directory: " + System.getProperty("user.dir"));
+        loadData();
+    }
+
 
     private void loadData() throws FileException{
         loadProducts();
@@ -35,7 +43,7 @@ public class AccessData implements dao{
     }
 
     private void loadOrders() throws FileException{
-        String directory = "main/resources/data/Orders";
+        String directory = filePath+"/data/Orders";
         try {
             DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(directory), "Orders_*.txt");
 
@@ -72,13 +80,13 @@ public class AccessData implements dao{
         Tax tax = taxes.get(csvStrings[2]);
         Product product = products.get(csvStrings[4]);
 
-        double area = Double.parseDouble(csvStrings[4]);
-        BigDecimal costPerSquareFoot = new BigDecimal(csvStrings[5]);
-        BigDecimal laborCostPerSquareFoot = new BigDecimal(csvStrings[6]);
-        BigDecimal materialCost = new BigDecimal(csvStrings[7]);
-        BigDecimal laborCostTax = new BigDecimal(csvStrings[8]);
-        BigDecimal totalTax = new BigDecimal(csvStrings[9]);
-        BigDecimal total = new BigDecimal(csvStrings[10]);
+        double area = Double.parseDouble(csvStrings[5]);
+        BigDecimal costPerSquareFoot = new BigDecimal(csvStrings[6]);
+        BigDecimal laborCostPerSquareFoot = new BigDecimal(csvStrings[7]);
+        BigDecimal materialCost = new BigDecimal(csvStrings[8]);
+        BigDecimal laborCostTax = new BigDecimal(csvStrings[9]);
+        BigDecimal totalTax = new BigDecimal(csvStrings[10]);
+        BigDecimal total = new BigDecimal(csvStrings[11]);
 
         return new Order(date, custName, tax,product,area,costPerSquareFoot,
                 laborCostPerSquareFoot,materialCost,laborCostTax,totalTax,total);
@@ -86,7 +94,7 @@ public class AccessData implements dao{
     }
 
     private void loadTax() throws FileException{
-        String filePath = "main/resources/data/Data/Tax.txt";
+        String filePath = this.filePath+"/data/Data/Taxes.txt";
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line = reader.readLine(); // Skip header
             while ((line = reader.readLine()) != null) {
@@ -102,7 +110,7 @@ public class AccessData implements dao{
     }
 
     private void loadProducts() throws FileException{
-        String filePath = "main/resources/data/Data/Products.txt";
+        String filePath = this.filePath+"/data/Data/Products.txt";
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line = reader.readLine(); // Skip header
             while ((line = reader.readLine()) != null) {
@@ -123,7 +131,7 @@ public class AccessData implements dao{
     }
 
     private void saveProducts() throws FileException{
-        String fileName = "main/resources/data/Orders/Products.txt";
+        String fileName = this.filePath+"/data/Data/Products.txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write("ProductType,CostPerSquareFoot,LaborCostPerSquareFoot");
             for (Product p : products.values()) {
@@ -137,7 +145,7 @@ public class AccessData implements dao{
     }
 
     private void saveTaxes() throws FileException{
-        String fileName = "main/resources/data/Orders/Taxes.txt";
+        String fileName = this.filePath+"/data/Data/Taxes.txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write("State,StateName,TaxRate");
             for (Tax t : taxes.values()) {
@@ -156,7 +164,7 @@ public class AccessData implements dao{
             List<Order> dateOrders = entry.getValue();
 
             // Create the file with the date as the name
-            String fileName = "main/resources/data/Orders/Orders_"+date.format(formatter) + ".txt";
+            String fileName = this.filePath+"/data/Orders/Orders_"+date.format(formatter) + ".txt";
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
                 writer.write("OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total");
                 for (int i=0;i<dateOrders.size();i++) {
@@ -193,6 +201,7 @@ public class AccessData implements dao{
 
     @Override
     public Order getOrder(LocalDate date, int orderNumber) throws NoSuchOrder {
+
         if(!orders.containsKey(date)){throw new NoSuchOrder(date+" doesn't exist in orders");}
 
         ArrayList<Order> dateOrders = orders.get(date);
