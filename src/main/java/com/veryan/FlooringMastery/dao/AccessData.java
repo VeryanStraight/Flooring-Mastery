@@ -1,5 +1,7 @@
 package com.veryan.FlooringMastery.dao;
 
+import org.springframework.stereotype.Component;
+
 import com.veryan.FlooringMastery.model.Order;
 import com.veryan.FlooringMastery.model.Product;
 import com.veryan.FlooringMastery.model.Tax;
@@ -15,6 +17,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@Component
 public class AccessData implements dao{
     private final HashMap<LocalDate, ArrayList<Order>> orders = new HashMap<>();
     private final HashMap<String, Tax> taxes = new HashMap<>();
