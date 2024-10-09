@@ -7,6 +7,11 @@ public class Tax implements model{
     public final String stateName;
     public BigDecimal taxRate; //might want to make private because it can be changed
 
+    public Tax(String state){
+        this.state = state;
+        this.stateName = null;
+    }
+
     public Tax(String state, String stateName, BigDecimal taxRate) {
         this.state = state;
         this.stateName = stateName;

@@ -84,11 +84,8 @@ public class AccessData implements dao{
         Product product = products.get(csvStrings[4]);
 
         BigDecimal area = new BigDecimal(csvStrings[5]);
-        BigDecimal costPerSquareFoot = new BigDecimal(csvStrings[6]);
-        BigDecimal laborCostPerSquareFoot = new BigDecimal(csvStrings[7]);
 
-        return new Order(date, custName, tax,product,area,costPerSquareFoot,
-                laborCostPerSquareFoot);
+        return new Order(date, custName, tax,product,area);
 
     }
 

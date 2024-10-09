@@ -52,10 +52,8 @@ public class AccessDataTest {
         Tax tax = new Tax("", "", BigDecimal.ONE);
         Product product = new Product("", BigDecimal.ONE, BigDecimal.ONE);
         BigDecimal area = BigDecimal.ONE;
-        BigDecimal costPerSquareFoot = BigDecimal.ONE;
-        BigDecimal laborCostPerSquareFoot = BigDecimal.ONE;
 
-        Order order = new Order(date,name, tax,product,area,costPerSquareFoot,laborCostPerSquareFoot);
+        Order order = new Order(date,name, tax,product,area);
         AccessData accessData = new AccessData("src/test/resources");
         accessData.addOrder(order);
     }
@@ -67,12 +65,10 @@ public class AccessDataTest {
         Tax tax = new Tax("", "", BigDecimal.ONE);
         Product product = new Product("", BigDecimal.ONE, BigDecimal.ONE);
         BigDecimal area = BigDecimal.ONE;
-        BigDecimal costPerSquareFoot = BigDecimal.ONE;
-        BigDecimal laborCostPerSquareFoot = BigDecimal.ONE;
 
-        Order order = new Order(date,name, tax,product,area,costPerSquareFoot,laborCostPerSquareFoot);
+        Order order = new Order(date,name, tax,product,area);
 
-        Order order2 = new Order(date,"name", tax,product,area,costPerSquareFoot,laborCostPerSquareFoot);
+        Order order2 = new Order(date,"name", tax,product,area);
         AccessData accessData = new AccessData("src/test/resources");
         accessData.addOrder(order);
         accessData.replaceOrder(order, order2);
@@ -85,10 +81,9 @@ public class AccessDataTest {
         Tax tax = new Tax("", "", BigDecimal.ONE);
         Product product = new Product("", BigDecimal.ONE, BigDecimal.ONE);
         BigDecimal area = BigDecimal.ONE;
-        BigDecimal costPerSquareFoot = BigDecimal.ONE;
-        BigDecimal laborCostPerSquareFoot = BigDecimal.ONE;
 
-        Order order = new Order(date,name, tax,product,area,costPerSquareFoot,laborCostPerSquareFoot);
+
+        Order order = new Order(date,name, tax,product,area);
         AccessData accessData = new AccessData("src/test/resources");
         accessData.addOrder(order);
         accessData.removeOrder(order);
@@ -101,10 +96,8 @@ public class AccessDataTest {
         Tax tax = new Tax("", "", BigDecimal.ONE);
         Product product = new Product("", BigDecimal.ONE, BigDecimal.ONE);
         BigDecimal area = BigDecimal.ONE;
-        BigDecimal costPerSquareFoot = BigDecimal.ONE;
-        BigDecimal laborCostPerSquareFoot = BigDecimal.ONE;
 
-        Order order = new Order(date,name, tax,product,area,costPerSquareFoot,laborCostPerSquareFoot);
+        Order order = new Order(date,name, tax,product,area);
         AccessData accessData = new AccessData("src/test/resources");
         accessData.addOrder(order);
         assertTrue(accessData.orderExists(order));

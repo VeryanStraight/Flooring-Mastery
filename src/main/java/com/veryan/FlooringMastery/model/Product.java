@@ -4,13 +4,17 @@ import java.math.BigDecimal;
 
 public class Product implements model{
     public final String productType;
-    public BigDecimal costPerSquareFoot; //maybe make these hidden
-    public BigDecimal laborCostPerSquareFoot; //maybe make these hidden
+    public BigDecimal costPerSquareFoot = new BigDecimal("0"); //maybe make these hidden
+    public BigDecimal laborCostPerSquareFoot = new BigDecimal("0"); //maybe make these hidden
 
     public Product(String productType, BigDecimal costPerSquareFoot, BigDecimal laborCostPerSquareFoot) {
         this.productType = productType;
         this.costPerSquareFoot = costPerSquareFoot;
         this.laborCostPerSquareFoot = laborCostPerSquareFoot;
+    }
+
+    public Product(String productType){
+        this.productType = productType;
     }
 
     @Override

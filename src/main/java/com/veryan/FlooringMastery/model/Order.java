@@ -10,18 +10,16 @@ public class Order implements model {
     public final Tax tax;
     public final Product product;
     public final BigDecimal area;
-    public final BigDecimal costPerSquareFoot;
-    public final BigDecimal laborCostPerSquareFoot;
     public final BigDecimal materialCost;
     public final BigDecimal laborCost;
     public final BigDecimal taxTotal;
     public final BigDecimal total;
 
     public Order(LocalDate date, String customerName, Tax tax, Product product,
-                 BigDecimal area, BigDecimal costPerSquareFoot, BigDecimal laborCostPerSquareFoot) {
+                 BigDecimal area) {
 
-        this.materialCost = costPerSquareFoot.multiply(area);
-        this.laborCost = laborCostPerSquareFoot.multiply(area);
+        this.materialCost = product.costPerSquareFoot.multiply(area);
+        this.laborCost = product.laborCostPerSquareFoot.multiply(area);
         this.taxTotal = materialCost.add(laborCost).multiply(tax.taxRate.divide(new BigDecimal(100), RoundingMode.HALF_UP));
         this.total = materialCost.add(laborCost).add(taxTotal);
 
@@ -30,8 +28,6 @@ public class Order implements model {
         this.tax = tax;
         this.product = product;
         this.area = area;
-        this.costPerSquareFoot = costPerSquareFoot;
-        this.laborCostPerSquareFoot = laborCostPerSquareFoot;
     }
 
     @Override
@@ -43,8 +39,8 @@ public class Order implements model {
                 ", TaxRate=" + tax.taxRate +
                 ", ProductType='" + product.productType + '\'' +
                 ", Area='" + area + '\'' +
-                ", CostPerSquareFoot=" + costPerSquareFoot +
-                ", LaborCostPerSquareFoot=" + laborCostPerSquareFoot +
+                ", CostPerSquareFoot=" + product.costPerSquareFoot +
+                ", LaborCostPerSquareFoot=" + product.laborCostPerSquareFoot +
                 ", MaterialCost=" + materialCost +
                 ", LaborCostTax=" + laborCost +
                 ", TaxTotal=" + taxTotal +
@@ -58,8 +54,8 @@ public class Order implements model {
                 "," + tax.taxRate +
                 "," + product.productType +
                 "," + area +
-                "," + costPerSquareFoot +
-                "," + laborCostPerSquareFoot +
+                "," + product.costPerSquareFoot +
+                "," + product.laborCostPerSquareFoot +
                 "," + materialCost +
                 "," + laborCost +
                 "," + taxTotal +
