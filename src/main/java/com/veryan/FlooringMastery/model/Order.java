@@ -3,6 +3,7 @@ package com.veryan.FlooringMastery.model;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Order implements model {
     public final LocalDate date;
@@ -15,9 +16,21 @@ public class Order implements model {
     public final BigDecimal taxTotal;
     public final BigDecimal total;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(date, order.date) && Objects.equals(customerName, order.customerName) && Objects.equals(tax, order.tax) && Objects.equals(product, order.product) && Objects.equals(area, order.area) && Objects.equals(materialCost, order.materialCost) && Objects.equals(laborCost, order.laborCost) && Objects.equals(taxTotal, order.taxTotal) && Objects.equals(total, order.total);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(date, customerName, tax, product, area, materialCost, laborCost, taxTotal, total);
+    }
+
     public Order(LocalDate date, String customerName, Tax tax, Product product,
                  BigDecimal area) {
-
         this.materialCost = product.costPerSquareFoot.multiply(area);
         this.laborCost = product.laborCostPerSquareFoot.multiply(area);
         this.taxTotal = materialCost.add(laborCost).multiply(tax.taxRate.divide(new BigDecimal(100), RoundingMode.HALF_UP));

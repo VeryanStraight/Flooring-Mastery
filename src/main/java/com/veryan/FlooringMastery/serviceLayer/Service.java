@@ -7,11 +7,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface Service {
-    List<Order> getOrders() throws NoSuchOrder, InvalidInput;
+    List<Order> getOrders();
     void addOrder(Order order) throws InvalidInput, OrderAlreadyExists;
 
-    void getOrder(LocalDate date, int orderNumber) throws NoSuchOrder, InvalidInput;
+    Order getOrder(LocalDate date, int orderNumber) throws NoSuchOrder;
     void replaceOrder(Order oldOrder, Order newOrder) throws NoSuchOrder, InvalidInput;
     void exportData();
+
+    void deleteOrder(Order order);
 
 }

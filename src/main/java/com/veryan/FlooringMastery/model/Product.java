@@ -1,11 +1,25 @@
 package com.veryan.FlooringMastery.model;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Product implements model{
     public final String productType;
     public BigDecimal costPerSquareFoot = new BigDecimal("0"); //maybe make these hidden
     public BigDecimal laborCostPerSquareFoot = new BigDecimal("0"); //maybe make these hidden
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(productType, product.productType) && Objects.equals(costPerSquareFoot, product.costPerSquareFoot) && Objects.equals(laborCostPerSquareFoot, product.laborCostPerSquareFoot);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(productType, costPerSquareFoot, laborCostPerSquareFoot);
+    }
 
     public Product(String productType, BigDecimal costPerSquareFoot, BigDecimal laborCostPerSquareFoot) {
         this.productType = productType;

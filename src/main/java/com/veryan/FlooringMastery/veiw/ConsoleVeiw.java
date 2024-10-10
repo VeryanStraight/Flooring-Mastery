@@ -29,14 +29,13 @@ public class ConsoleVeiw implements Veiw {
                 "  * 6. Quit\n" +
                 "  *\n" +
                 "  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n" +
-                "  Input the name of an option:");
+                "  Input the first word in the name of an option:");
 
         return scanner.next();
     }
 
     @Override
     public void displayOrders(List<Order> orders) {
-        System.out.println("\n\n==============================================================================\n\n");
         for(Order o: orders){
             displayOrder(o);
         }
@@ -44,7 +43,6 @@ public class ConsoleVeiw implements Veiw {
 
     @Override
     public Order makeOrder() {
-        System.out.println("\n\n==============================================================================\n\n");
         System.out.println("Input date in format dd/mm/yyyy: ");
         LocalDate date = LocalDate.parse(scanner.next(), formatter);
         System.out.println("Input customer name: ");
@@ -61,20 +59,16 @@ public class ConsoleVeiw implements Veiw {
 
     @Override
     public void displayOrder(Order order) {
-        System.out.println("\n\n==============================================================================\n\n");
         System.out.println(order);
     }
 
     @Override
     public void userMessage(String message) {
-        System.out.println("\n\n==============================================================================\n\n");
         System.out.println(message);
-
     }
 
     @Override
     public Boolean userQuestion(String question) {
-        System.out.println("\n\n==============================================================================\n\n");
         userMessage(question);
         System.out.println("Type y or n: ");
         String answer = scanner.next();
@@ -83,7 +77,6 @@ public class ConsoleVeiw implements Veiw {
 
     @Override
     public OrderID findOrder() {
-        System.out.println("\n\n==============================================================================\n\n");
         System.out.println("Order date in dd/mm/yyyy format: ");
         LocalDate date = LocalDate.parse(scanner.next(), formatter);
         System.out.println("order number: ");
