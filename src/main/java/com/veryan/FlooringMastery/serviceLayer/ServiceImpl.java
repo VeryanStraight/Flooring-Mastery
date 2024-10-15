@@ -1,7 +1,7 @@
 package com.veryan.FlooringMastery.serviceLayer;
 
 import com.veryan.FlooringMastery.dao.FileException;
-import com.veryan.FlooringMastery.dao.dao;
+import com.veryan.FlooringMastery.dao.Dao;
 import com.veryan.FlooringMastery.model.Order;
 import com.veryan.FlooringMastery.model.Product;
 import com.veryan.FlooringMastery.model.Tax;
@@ -14,10 +14,10 @@ import java.util.Map;
 
 @Service
 public class ServiceImpl implements com.veryan.FlooringMastery.serviceLayer.Service {
-    private final dao dao;
+    private final Dao dao;
 
     @Autowired
-    public ServiceImpl(dao dataAccessObject) {
+    public ServiceImpl(Dao dataAccessObject) {
         this.dao = dataAccessObject;
     }
 

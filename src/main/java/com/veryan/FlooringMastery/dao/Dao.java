@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-public interface dao {
+public interface Dao {
     void saveData() throws FileException;
     List<Order> getOrders();
     Map<String, Tax> getTaxes();

@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Component
-public class AccessData implements dao{
+public class AccessData implements Dao {
     private final HashMap<LocalDate, ArrayList<Order>> orders = new HashMap<>();
     private final HashMap<String, Tax> taxes = new HashMap<>();
     private final HashMap<String, Product> products = new HashMap<>();
@@ -36,7 +36,6 @@ public class AccessData implements dao{
         System.out.println("Current working directory: " + System.getProperty("user.dir"));
         loadData();
     }
-
 
     private void loadData() throws FileException{
         loadProducts();

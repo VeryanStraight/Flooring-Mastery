@@ -5,8 +5,8 @@ import com.veryan.FlooringMastery.model.OrderID;
 import com.veryan.FlooringMastery.serviceLayer.InvalidInput;
 import com.veryan.FlooringMastery.serviceLayer.NoSuchOrder;
 import com.veryan.FlooringMastery.serviceLayer.OrderAlreadyExists;
-import com.veryan.FlooringMastery.serviceLayer.ServiceImpl;
-import com.veryan.FlooringMastery.veiw.ConsoleVeiw;
+import com.veryan.FlooringMastery.serviceLayer.Service;
+import com.veryan.FlooringMastery.veiw.Veiw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -14,13 +14,13 @@ import java.util.List;
 
 @Controller
 public class FlooringController {
-    private final ServiceImpl service;
-    private final ConsoleVeiw consoleVeiw;
+    private final Service service;
+    private final Veiw consoleVeiw;
     private boolean running = true;
     private String methodRepeat = "";
 
     @Autowired
-    public FlooringController(ServiceImpl service, ConsoleVeiw consoleVeiw) {
+    public FlooringController(Service service, Veiw consoleVeiw) {
         this.service = service;
         this.consoleVeiw = consoleVeiw;
     }
