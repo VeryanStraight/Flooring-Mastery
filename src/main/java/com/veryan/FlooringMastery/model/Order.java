@@ -7,6 +7,7 @@ import java.util.Objects;
 
 public class Order implements model {
     public final LocalDate date;
+    public int orderNumber;
     public final String customerName;
     public final Tax tax;
     public final Product product;
@@ -29,6 +30,21 @@ public class Order implements model {
         return Objects.hash(date, customerName, tax, product, area, materialCost, laborCost, taxTotal, total);
     }
 
+    public Order(LocalDate date, int orderNumber, String customerName, Tax tax, Product product,
+                 BigDecimal area) {
+        this.orderNumber = orderNumber;
+        this.materialCost = product.costPerSquareFoot.multiply(area);
+        this.laborCost = product.laborCostPerSquareFoot.multiply(area);
+        this.taxTotal = materialCost.add(laborCost).multiply(tax.taxRate.divide(new BigDecimal(100), RoundingMode.HALF_UP));
+        this.total = materialCost.add(laborCost).add(taxTotal);
+
+        this.date = date;
+        this.customerName = customerName;
+        this.tax = tax;
+        this.product = product;
+        this.area = area;
+    }
+
     public Order(LocalDate date, String customerName, Tax tax, Product product,
                  BigDecimal area) {
         this.materialCost = product.costPerSquareFoot.multiply(area);
@@ -47,6 +63,7 @@ public class Order implements model {
     public String toString() {
         return "Orders{" +
                 "Date=" + date +
+                "OrderNumber=" + orderNumber +
                 ", CustomerName='" + customerName + '\'' +
                 ", State='" + tax.state + '\'' +
                 ", TaxRate=" + tax.taxRate +

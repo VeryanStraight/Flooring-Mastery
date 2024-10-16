@@ -9,7 +9,6 @@ import org.junit.jupiter.api.*;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,12 +17,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AccessDataTest {
     @Test
-    void testLoad() throws FileException, FileNotFoundException {
+    void testLoad() throws DaoException, FileNotFoundException {
         new AccessData("src/test/resources");
     }
 
     @Test
-    void testGetters() throws FileException, FileNotFoundException {
+    void testGetters() throws DaoException, FileNotFoundException {
         AccessData accessData = new AccessData("src/test/resources");
         Map<String, Tax> taxes = accessData.getTaxes();
         assertEquals(taxes.size(), 4);
@@ -34,19 +33,19 @@ public class AccessDataTest {
     }
 
     @Test
-    void testSaveData() throws FileException, FileNotFoundException {
+    void testSaveData() throws DaoException, FileNotFoundException {
         AccessData accessData = new AccessData("src/test/resources");
         accessData.saveData();
     }
 
     @Test
-    void testGetOrder() throws FileException, NoSuchOrder {
+    void testGetOrder() throws DaoException, NoSuchOrder {
         AccessData accessData = new AccessData("src/test/resources");
         accessData.getOrder(LocalDate.parse("2013-01-06"), 0);
     }
 
     @Test
-    void testAddOrder() throws FileException {
+    void testAddOrder() throws DaoException {
         LocalDate date = LocalDate.of(2024, 7,2);
         String name = "";
         Tax tax = new Tax("", "", BigDecimal.ONE);
@@ -59,7 +58,7 @@ public class AccessDataTest {
     }
 
     @Test
-    void testReplaceOrder() throws FileException, NoSuchOrder {
+    void testReplaceOrder() throws DaoException, NoSuchOrder {
         LocalDate date = LocalDate.of(2024, 7,2);
         String name = "";
         Tax tax = new Tax("", "", BigDecimal.ONE);
@@ -75,7 +74,7 @@ public class AccessDataTest {
     }
 
     @Test
-    void testRemoveOrder() throws FileException {
+    void testRemoveOrder() throws DaoException {
         LocalDate date = LocalDate.of(2024, 7,2);
         String name = "";
         Tax tax = new Tax("", "", BigDecimal.ONE);
@@ -90,7 +89,7 @@ public class AccessDataTest {
     }
 
     @Test
-    void testOrderExists() throws FileException {
+    void testOrderExists() throws DaoException {
         LocalDate date = LocalDate.of(2024, 7,2);
         String name = "";
         Tax tax = new Tax("", "", BigDecimal.ONE);

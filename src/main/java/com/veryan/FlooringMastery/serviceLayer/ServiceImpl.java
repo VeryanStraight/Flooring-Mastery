@@ -1,6 +1,6 @@
 package com.veryan.FlooringMastery.serviceLayer;
 
-import com.veryan.FlooringMastery.dao.FileException;
+import com.veryan.FlooringMastery.dao.DaoException;
 import com.veryan.FlooringMastery.dao.Dao;
 import com.veryan.FlooringMastery.model.Order;
 import com.veryan.FlooringMastery.model.Product;
@@ -72,7 +72,7 @@ public class ServiceImpl implements com.veryan.FlooringMastery.serviceLayer.Serv
     public void exportData() {
         try {
             dao.saveData();
-        } catch (FileException e) {
+        } catch (DaoException e) {
             System.out.println("failed to save");
         }
     }

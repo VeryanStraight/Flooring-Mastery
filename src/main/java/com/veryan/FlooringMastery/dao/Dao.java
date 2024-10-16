@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface Dao {
-    void saveData() throws FileException;
+    void saveData() throws DaoException;
     List<Order> getOrders();
     Map<String, Tax> getTaxes();
     Map<String, Product> getProducts();

@@ -1,6 +1,5 @@
 package com.veryan.FlooringMastery.serviceLayer;
 
-import com.veryan.FlooringMastery.dao.FileException;
 import com.veryan.FlooringMastery.model.Order;
 
 import java.time.LocalDate;

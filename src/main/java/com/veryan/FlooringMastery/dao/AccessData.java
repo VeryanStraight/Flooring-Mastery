@@ -17,7 +17,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-@Component
 public class AccessData implements Dao {
     private final HashMap<LocalDate, ArrayList<Order>> orders = new HashMap<>();
     private final HashMap<String, Tax> taxes = new HashMap<>();
@@ -27,24 +26,24 @@ public class AccessData implements Dao {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
 
 
-    AccessData() throws FileException{
+    AccessData() throws DaoException {
         loadData();
     }
 
-    AccessData(String filePath) throws FileException {
+    AccessData(String filePath) throws DaoException {
         this.filePath = filePath;
         System.out.println("Current working directory: " + System.getProperty("user.dir"));
         loadData();
     }
 
-    private void loadData() throws FileException{
+    private void loadData() throws DaoException {
         loadProducts();
         loadTax();
         loadOrders();
 
     }
 
-    private void loadOrders() throws FileException{
+    private void loadOrders() throws DaoException {
         String directory = filePath+"/data/Orders";
         try {
             DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(directory), "Orders_*.txt");
@@ -72,7 +71,7 @@ public class AccessData implements Dao {
 
 
         } catch (IOException e) {
-            throw new FileException(e.getMessage());
+            throw new DaoException(e.getMessage());
         }
 
     }
@@ -88,7 +87,7 @@ public class AccessData implements Dao {
 
     }
 
-    private void loadTax() throws FileException{
+    private void loadTax() throws DaoException {
         String filePath = this.filePath+"/data/Data/Taxes.txt";
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line = reader.readLine(); // Skip header
@@ -99,12 +98,12 @@ public class AccessData implements Dao {
                 taxes.put(values[0], t);
             }
         } catch (IOException e) {
-            throw new FileException(e.getMessage());
+            throw new DaoException(e.getMessage());
         }
 
     }
 
-    private void loadProducts() throws FileException{
+    private void loadProducts() throws DaoException {
         String filePath = this.filePath+"/data/Data/Products.txt";
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line = reader.readLine(); // Skip header
@@ -115,17 +114,17 @@ public class AccessData implements Dao {
                 products.put(values[0], p);
             }
         } catch (IOException e) {
-            throw new FileException(e.getMessage());
+            throw new DaoException(e.getMessage());
         }
     }
     @Override
-    public void saveData() throws FileException{
+    public void saveData() throws DaoException {
         saveOrders();
         saveTaxes();
         saveProducts();
     }
 
-    private void saveProducts() throws FileException{
+    private void saveProducts() throws DaoException {
         String fileName = this.filePath+"/data/Data/Products.txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write("ProductType,CostPerSquareFoot,LaborCostPerSquareFoot");
@@ -135,11 +134,11 @@ public class AccessData implements Dao {
                 writer.write(p.toCSV());
             }
         } catch (IOException e) {
-            throw new FileException(e.getMessage());
+            throw new DaoException(e.getMessage());
         }
     }
 
-    private void saveTaxes() throws FileException{
+    private void saveTaxes() throws DaoException {
         String fileName = this.filePath+"/data/Data/Taxes.txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write("State,StateName,TaxRate");
@@ -149,11 +148,11 @@ public class AccessData implements Dao {
                 writer.write(t.toCSV());
             }
         } catch (IOException e) {
-            throw new FileException(e.getMessage());
+            throw new DaoException(e.getMessage());
         }
     }
 
-    private void saveOrders() throws FileException{
+    private void saveOrders() throws DaoException {
         for (Map.Entry<LocalDate, ArrayList<Order>> entry : orders.entrySet()) {
             LocalDate date = entry.getKey();
             List<Order> dateOrders = entry.getValue();
@@ -169,7 +168,7 @@ public class AccessData implements Dao {
                     writer.write(i+","+o.toCSV());
                 }
             } catch (IOException e) {
-                throw new FileException(e.getMessage());
+                throw new DaoException(e.getMessage());
             }
         }
     }
