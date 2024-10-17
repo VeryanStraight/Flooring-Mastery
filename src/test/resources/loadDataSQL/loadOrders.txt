@@ -1,0 +1,15 @@
+CREATE TABLE Orders (
+    date DATE,
+    OrderNumber INT NOT NULL,
+    CustomerName VARCHAR(255),
+    State CHAR(2),
+    ProductType VARCHAR(50),
+    Area DECIMAL(10, 2),
+    MaterialCost DECIMAL(10, 4),
+    LaborCost DECIMAL(10, 4),
+    Tax DECIMAL(10, 6),
+    Total DECIMAL(10, 6),
+    PRIMARY KEY (date, OrderNumber),
+    FOREIGN KEY (State) REFERENCES Taxes(State),
+    FOREIGN KEY (ProductType) REFERENCES Products(ProductType)
+);

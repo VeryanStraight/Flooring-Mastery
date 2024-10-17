@@ -29,19 +29,20 @@ public class JdbcDaoTest {
     @BeforeEach
     public void setUp(){
         //TODO: create a database test
-        String url = "jdbc:postgresql://localhost:5432/testflooringmastery";
-        String username = "postgres";
+        String url = "jdbc:mysql://localhost:3306/testflooringmastery?useSSL=false&serverTimezone=UTC";
+        String username = "root";
         String password = "password";
 
         try {
             this.conn = DriverManager.getConnection(url, username, password);
 
-            File myObj = new File("src/test/resources/loadDatabase.txt");
-            Scanner scanner = new Scanner(myObj);
-            String sql = scanner.tokens().collect(Collectors.joining(" "));
+            executeUpdateFromFile("src/test/resources/loadDataSQL/loadTaxes.txt");
+            executeUpdateFromFile("src/test/resources/loadDataSQL/loadProducts.txt");
+            executeUpdateFromFile("src/test/resources/loadDataSQL/loadOrders.txt");
+            executeUpdateFromFile("src/test/resources/loadDataSQL/addTaxes.txt");
+            executeUpdateFromFile("src/test/resources/loadDataSQL/addProducts.txt");
+            executeUpdateFromFile("src/test/resources/loadDataSQL/addOrders.txt");
 
-            PreparedStatement query = conn.prepareStatement(sql);
-            query.executeUpdate();
 
         } catch (SQLException | FileNotFoundException e) {
             e.printStackTrace();
@@ -70,12 +71,27 @@ public class JdbcDaoTest {
 
     }
 
+    /**
+     * load a query from a file and execute it
+     * @param fileName path to the file
+     */
+    private void executeUpdateFromFile(String fileName) throws FileNotFoundException, SQLException {
+        File myObj = new File(fileName);
+        Scanner scanner = new Scanner(myObj);
+        String sql = scanner.tokens().collect(Collectors.joining(" "));
+        System.out.println(sql);
+        PreparedStatement query = conn.prepareStatement(sql);
+        query.executeUpdate();
+    }
+
     @AfterEach
     public void cleanUp(){
         try {
-            PreparedStatement stmt = conn.prepareStatement("DROP TABLE Orders; " +
-                                                                "DROP TABLE Taxes; " +
-                                                                "DROP TABLE Products; ");
+            PreparedStatement stmt = conn.prepareStatement("DROP TABLE Orders");
+            stmt.executeUpdate();
+            stmt = conn.prepareStatement("DROP TABLE Taxes");
+            stmt.executeUpdate();
+            stmt = conn.prepareStatement("DROP TABLE Products");
             stmt.executeUpdate();
             conn.close();
         } catch (SQLException e) {

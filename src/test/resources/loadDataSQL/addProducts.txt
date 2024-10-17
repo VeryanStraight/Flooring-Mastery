@@ -1,0 +1,7 @@
+INSERT INTO Products
+(ProductType, CostPerSquareFoot, LaborCostPerSquareFoot)
+VALUES
+('laminate', 1.75, 2.10),
+('wood', 5.15, 4.75),
+('tile', 3.50, 4.15),
+('carpet', 2.25, 2.10);

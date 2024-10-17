@@ -1,0 +1,5 @@
+CREATE TABLE Products (
+    ProductType VARCHAR(50) PRIMARY KEY,
+    CostPerSquareFoot DECIMAL(10, 2),
+    LaborCostPerSquareFoot DECIMAL(10, 2)
+);

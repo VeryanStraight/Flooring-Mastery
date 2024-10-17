@@ -28,8 +28,8 @@ public class JdbcDao implements Dao{
      * @return the connection
      */
     private Connection makeConnection(String database){
-        String url = "jdbc:postgresql://localhost:5432/"+database;
-        String username = "postgres";
+        String url = "jdbc:mysql://localhost:3306/"+database+"?useSSL=false&serverTimezone=UTC";
+        String username = "root";
         String password = "password";
         Connection connection = null;
 
@@ -226,21 +226,35 @@ public class JdbcDao implements Dao{
 
     @Override
     public void addOrder(Order order) {
+        String getOrderNumQuery = "SELECT MAX(orderNumber) OrderNumber " +
+                "FROM orders " +
+                "WHERE date = ?";
+
+
         String query = "INSERT INTO Orders (" +
-                "    date, CustomerName, State, ProductType, Area, " +
+                "    date, OrderNumber, CustomerName, State, ProductType, Area, " +
                 "    MaterialCost, LaborCost, Tax, Total" +
-                ") VALUES (?,?,?,?,?,?,?,?,?)";
+                ") VALUES (?,?,?,?,?,?,?,?,?,?)";
         try {
-            PreparedStatement stmt = con.prepareStatement(query);
+            PreparedStatement stmt = con.prepareStatement(getOrderNumQuery);
             stmt.setDate(1, Date.valueOf(order.date));
-            stmt.setString(2, order.customerName);
-            stmt.setString(3, order.tax.state);
-            stmt.setString(4,order.product.productType);
-            stmt.setBigDecimal(5, order.area);
-            stmt.setBigDecimal(6, order.materialCost);
-            stmt.setBigDecimal(7, order.laborCost);
-            stmt.setBigDecimal(8, order.taxTotal);
-            stmt.setBigDecimal(9, order.total);
+            ResultSet result = stmt.executeQuery();
+            int orderNum = 0;
+            while (result.next()){
+                orderNum = result.getInt("OrderNumber");
+            }
+
+            stmt = con.prepareStatement(query);
+            stmt.setDate(1, Date.valueOf(order.date));
+            stmt.setInt(2, orderNum);
+            stmt.setString(3, order.customerName);
+            stmt.setString(4, order.tax.state);
+            stmt.setString(5,order.product.productType);
+            stmt.setBigDecimal(6, order.area);
+            stmt.setBigDecimal(7, order.materialCost);
+            stmt.setBigDecimal(8, order.laborCost);
+            stmt.setBigDecimal(9, order.taxTotal);
+            stmt.setBigDecimal(10, order.total);
 
 
             int rs = stmt.executeUpdate();

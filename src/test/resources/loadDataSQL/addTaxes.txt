@@ -1,0 +1,7 @@
+INSERT INTO Taxes
+(State, StateName, TaxRate)
+VALUES
+('TX', 'Texas', 4.45),
+('WA', 'Washington', 9.25),
+('KY', 'Kentucky', 6.00),
+('CA', 'California', 25.00);
