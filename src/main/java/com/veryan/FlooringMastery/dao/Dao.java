@@ -12,6 +12,7 @@ import java.util.Map;
 public interface Dao {
     void saveData() throws DaoException;
     List<Order> getOrders();
+    List<Order> getOrders(LocalDate date);
     Map<String, Tax> getTaxes();
     Map<String, Product> getProducts();
     Order getOrder(LocalDate date, int orderNumber) throws NoSuchOrder ;

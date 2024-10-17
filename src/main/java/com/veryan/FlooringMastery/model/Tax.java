@@ -18,7 +18,7 @@ public class Tax implements model{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tax tax = (Tax) o;
-        return Objects.equals(state, tax.state) && Objects.equals(stateName, tax.stateName) && Objects.equals(taxRate, tax.taxRate);
+        return Objects.equals(state, tax.state) && Objects.equals(stateName, tax.stateName) && taxRate.compareTo(tax.taxRate) == 0;
     }
 
     @Override

@@ -9,8 +9,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
+import java.util.Set;
 
 @Component
 public class ConsoleVeiw implements Veiw {
@@ -25,13 +25,26 @@ public class ConsoleVeiw implements Veiw {
                 "  * 2. Add an Order\n" +
                 "  * 3. Edit an Order\n" +
                 "  * 4. Remove an Order\n" +
-                "  * 5. Export All Data\n" +
-                "  * 6. Quit\n" +
+                "  * 5. Quit\n" +
                 "  *\n" +
                 "  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n" +
                 "  Input the first word in the name of an option:");
 
         return scanner.next();
+    }
+
+    private LocalDate parseableDate(String d){
+        try{
+            return LocalDate.parse(d, formatter);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public LocalDate askDisplayOrders() {
+        System.out.println("Input date in format dd/mm/yyyy: ");
+        return parseableDate(scanner.next());
     }
 
     @Override
@@ -42,15 +55,21 @@ public class ConsoleVeiw implements Veiw {
     }
 
     @Override
-    public Order makeOrder() {
+    public Order makeOrder(Set<Product> p) {
         System.out.println("Input date in format dd/mm/yyyy: ");
-        LocalDate date = LocalDate.parse(scanner.next(), formatter);
+        LocalDate date = parseableDate(scanner.next());
+        return makeOrder(p, date);
+    }
+
+    @Override
+    public Order makeOrder(Set<Product> p, LocalDate date) {
         System.out.println("Input customer name: ");
         String customerName = scanner.next();
         System.out.println("Input state code: ");
-        Tax tax = new Tax(scanner.next());
+        Tax tax = new Tax(scanner.next().toUpperCase());
+        System.out.println(p);
         System.out.println("Input product name: ");
-        Product product = new Product(scanner.next());
+        Product product = new Product(scanner.next().toLowerCase());
         System.out.println("Input area: ");
         BigDecimal area = new BigDecimal(scanner.next());
 
@@ -78,9 +97,14 @@ public class ConsoleVeiw implements Veiw {
     @Override
     public OrderID findOrder() {
         System.out.println("Order date in dd/mm/yyyy format: ");
-        LocalDate date = LocalDate.parse(scanner.next(), formatter);
+        LocalDate date = parseableDate(scanner.next());
         System.out.println("order number: ");
-        int num = scanner.nextInt();
+        int num;
+        try {
+            num = scanner.nextInt();
+        } catch (Exception ignored) {
+            num = -1;
+        }
         return new OrderID(date, num);
     }
 }

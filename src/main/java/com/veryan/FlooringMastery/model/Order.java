@@ -22,7 +22,7 @@ public class Order implements model {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return Objects.equals(date, order.date) && Objects.equals(customerName, order.customerName) && Objects.equals(tax, order.tax) && Objects.equals(product, order.product) && Objects.equals(area, order.area) && Objects.equals(materialCost, order.materialCost) && Objects.equals(laborCost, order.laborCost) && Objects.equals(taxTotal, order.taxTotal) && Objects.equals(total, order.total);
+        return date.equals(order.date) && customerName.equals(order.customerName) && tax.equals(order.tax) && product.equals(order.product) && area.compareTo(order.area) == 0 && materialCost.compareTo(order.materialCost) == 0 && laborCost.compareTo(order.laborCost) == 0 && taxTotal.compareTo(order.taxTotal) == 0 && total.compareTo(order.total) == 0;
     }
 
     @Override

@@ -13,7 +13,7 @@ public class Product implements model{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Objects.equals(productType, product.productType) && Objects.equals(costPerSquareFoot, product.costPerSquareFoot) && Objects.equals(laborCostPerSquareFoot, product.laborCostPerSquareFoot);
+        return Objects.equals(productType, product.productType) && costPerSquareFoot.compareTo(product.costPerSquareFoot) == 0 && laborCostPerSquareFoot.compareTo(product.laborCostPerSquareFoot) == 0;
     }
 
     @Override

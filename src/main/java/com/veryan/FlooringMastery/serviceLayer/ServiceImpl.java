@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class ServiceImpl implements com.veryan.FlooringMastery.serviceLayer.Service {
@@ -22,15 +24,22 @@ public class ServiceImpl implements com.veryan.FlooringMastery.serviceLayer.Serv
     }
 
     @Override
-    public List<Order> getOrders() {
-        return dao.getOrders();
+    public List<Order> getOrders(LocalDate date) throws NoSuchOrder{
+        List<Order> li = dao.getOrders(date);
+        if(li.isEmpty()){throw new NoSuchOrder();}
+
+        return li;
     }
 
     @Override
-    public void addOrder(Order order) throws InvalidInput, OrderAlreadyExists {
-        order = initliseOrder(order);
+    public Set<Product> getProducts() {
+        return new HashSet<>(dao.getProducts().values());
+    }
 
-        if(dao.getOrders().contains(order)){
+
+    @Override
+    public void addOrder(Order order) throws OrderAlreadyExists {
+        if(dao.orderExists(order)){
             throw new OrderAlreadyExists("already exists: "+order);
         }
         dao.addOrder(order);
@@ -38,6 +47,7 @@ public class ServiceImpl implements com.veryan.FlooringMastery.serviceLayer.Serv
 
     @Override
     public Order getOrder(LocalDate date, int orderNumber) throws NoSuchOrder {
+        if (date == null || orderNumber < 0){throw new NoSuchOrder("invalid date or orderNumber");}
         return dao.getOrder(date, orderNumber);
     }
 
@@ -47,12 +57,17 @@ public class ServiceImpl implements com.veryan.FlooringMastery.serviceLayer.Serv
             throw new InvalidInput("cant replace orders with different dates or orderNumbers");
         }
 
-        newOrder = initliseOrder(newOrder);
         dao.replaceOrder(oldOrder, newOrder);
 
     }
 
-    private Order initliseOrder(Order order) throws InvalidInput {
+    public Order initliseOrder(Order order) throws InvalidInput {
+        if(order.date == null || order.date.isBefore(LocalDate.now())){
+            throw new InvalidInput("invalid date");
+        }else if(order.area.doubleValue() < 100){
+            throw new InvalidInput("area must be >= 100");
+        }
+
         Map<String, Product> products = dao.getProducts();
         Map<String, Tax> taxes = dao.getTaxes();
 

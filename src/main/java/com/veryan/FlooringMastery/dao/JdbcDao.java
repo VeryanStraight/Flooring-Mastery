@@ -18,8 +18,8 @@ import java.util.Map;
 public class JdbcDao implements Dao{
 
     private final Connection con;
-    private Connection makeConnection(){
-        String url = "jdbc:postgresql://localhost:5432/flooringmastery";
+    private Connection makeConnection(String database){
+        String url = "jdbc:postgresql://localhost:5432/"+database;
         String username = "postgres";
         String password = "password";
         Connection connection = null;
@@ -34,8 +34,13 @@ public class JdbcDao implements Dao{
         return connection;
     }
 
+
+
     JdbcDao(){
-        this.con = makeConnection();
+        this.con = makeConnection("flooringmastery");
+    }
+    JdbcDao(String database){
+        this.con = makeConnection(database);
     }
 
     @Override
@@ -61,6 +66,44 @@ public class JdbcDao implements Dao{
 
             while (rs.next()) {
                 LocalDate date = LocalDate.parse(rs.getString("date"));
+                int orderNumber = rs.getInt("OrderNumber");
+                String customerName = rs.getString("CustomerName");
+                String state = rs.getString("State");
+                String stateName = rs.getString("StateName");
+                BigDecimal taxRate = rs.getBigDecimal("TaxRate");
+                String productType = rs.getString("ProductType");
+                BigDecimal costPerSquareFoot = rs.getBigDecimal("CostPerSquareFoot");
+                BigDecimal laborCostPerSquareFoot = rs.getBigDecimal("LaborCostPerSquareFoot");
+                BigDecimal area = rs.getBigDecimal("Area");
+
+                Tax t = new Tax(state,stateName,taxRate);
+                Product p = new Product(productType,costPerSquareFoot,laborCostPerSquareFoot);
+
+                orders.add(new Order(date,orderNumber,customerName,t,p,area));
+            }
+
+        } catch (SQLException e) {
+            //TODO: log it instead
+            e.printStackTrace();
+        }
+        return orders;
+    }
+
+    @Override
+    public List<Order> getOrders(LocalDate date) {
+        String query = "SELECT * FROM Orders o\n" +
+                        "JOIN Products p ON p.producttype = o.producttype\n" +
+                        "JOIN Taxes t ON t.state = o.state " +
+                        "WHERE o.date = ?";
+        List<Order> orders = new ArrayList<>();
+
+
+        try {
+            PreparedStatement stmt = con.prepareStatement(query);
+            stmt.setDate(1, Date.valueOf(date));
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
                 int orderNumber = rs.getInt("OrderNumber");
                 String customerName = rs.getString("CustomerName");
                 String state = rs.getString("State");
