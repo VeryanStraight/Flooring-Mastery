@@ -3,10 +3,38 @@ package com.veryan.FlooringMastery.model;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Product implements model{
+/**
+ * the model for the products
+ */
+public class Product{
+    /**the product type*/
     public final String productType;
-    public BigDecimal costPerSquareFoot = new BigDecimal("0"); //maybe make these hidden
-    public BigDecimal laborCostPerSquareFoot = new BigDecimal("0"); //maybe make these hidden
+    /**the cost per square foot of the material*/
+    public final BigDecimal costPerSquareFoot;
+    /**the labour cost per square foot for installation*/
+    public final BigDecimal laborCostPerSquareFoot ;
+
+    /**
+     * constructor for the product
+     * @param productType the product type
+     * @param costPerSquareFoot the cost per square foot
+     * @param laborCostPerSquareFoot the labour cost per square foot
+     */
+    public Product(String productType, BigDecimal costPerSquareFoot, BigDecimal laborCostPerSquareFoot) {
+        this.productType = productType;
+        this.costPerSquareFoot = costPerSquareFoot;
+        this.laborCostPerSquareFoot = laborCostPerSquareFoot;
+    }
+
+    /**
+     * constructor for a temporary product (when only product type known)
+     * @param productType the product type
+     */
+    public Product(String productType){
+        this.productType = productType;
+        this.costPerSquareFoot = new BigDecimal("0");
+        this.laborCostPerSquareFoot = new BigDecimal("0");
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -21,16 +49,6 @@ public class Product implements model{
         return Objects.hash(productType, costPerSquareFoot, laborCostPerSquareFoot);
     }
 
-    public Product(String productType, BigDecimal costPerSquareFoot, BigDecimal laborCostPerSquareFoot) {
-        this.productType = productType;
-        this.costPerSquareFoot = costPerSquareFoot;
-        this.laborCostPerSquareFoot = laborCostPerSquareFoot;
-    }
-
-    public Product(String productType){
-        this.productType = productType;
-    }
-
     @Override
     public String toString() {
         return "Products{" +
@@ -38,10 +56,5 @@ public class Product implements model{
                 ", CostPerSquareFoot=" + costPerSquareFoot +
                 ", LaborCostPerSquareFoot=" + laborCostPerSquareFoot +
                 '}';
-    }
-
-    @Override
-    public String toCSV() {
-        return productType + "," + costPerSquareFoot + "," + laborCostPerSquareFoot;
     }
 }

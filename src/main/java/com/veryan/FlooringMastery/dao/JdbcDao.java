@@ -14,10 +14,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * a JDBC implementation of the dao
+ */
 @Component
 public class JdbcDao implements Dao{
 
     private final Connection con;
+
+    /**
+     * connects to the database
+     * @param database the name of the database to connect to
+     * @return the connection
+     */
     private Connection makeConnection(String database){
         String url = "jdbc:postgresql://localhost:5432/"+database;
         String username = "postgres";
@@ -26,7 +35,6 @@ public class JdbcDao implements Dao{
 
         try {
             connection = DriverManager.getConnection(url, username, password);
-
         } catch (SQLException e) {
             //TODO: handle this better
             e.printStackTrace();
@@ -34,17 +42,24 @@ public class JdbcDao implements Dao{
         return connection;
     }
 
-
-
+    /**
+     * constructor (for Spring to use)
+     * automatically uses flooringmastery database
+     */
     JdbcDao(){
         this.con = makeConnection("flooringmastery");
     }
+
+    /**
+     * constructor that allows you to specify what database to use
+     * @param database the name of the database
+     */
     JdbcDao(String database){
         this.con = makeConnection(database);
     }
 
     @Override
-    public void saveData() throws DaoException {
+    public void saveAndClose() throws DaoException {
         try {
             con.close();
         } catch (SQLException e) {
@@ -66,20 +81,7 @@ public class JdbcDao implements Dao{
 
             while (rs.next()) {
                 LocalDate date = LocalDate.parse(rs.getString("date"));
-                int orderNumber = rs.getInt("OrderNumber");
-                String customerName = rs.getString("CustomerName");
-                String state = rs.getString("State");
-                String stateName = rs.getString("StateName");
-                BigDecimal taxRate = rs.getBigDecimal("TaxRate");
-                String productType = rs.getString("ProductType");
-                BigDecimal costPerSquareFoot = rs.getBigDecimal("CostPerSquareFoot");
-                BigDecimal laborCostPerSquareFoot = rs.getBigDecimal("LaborCostPerSquareFoot");
-                BigDecimal area = rs.getBigDecimal("Area");
-
-                Tax t = new Tax(state,stateName,taxRate);
-                Product p = new Product(productType,costPerSquareFoot,laborCostPerSquareFoot);
-
-                orders.add(new Order(date,orderNumber,customerName,t,p,area));
+                orders.add(creatOrder(rs,date));
             }
 
         } catch (SQLException e) {
@@ -87,6 +89,30 @@ public class JdbcDao implements Dao{
             e.printStackTrace();
         }
         return orders;
+    }
+
+    /**
+     * creates an order (and it's tax and product) from a result set and a given date
+     * @param rs the result set
+     * @param date the date
+     * @return the new order
+     * @throws SQLException if the result set is missing a column
+     */
+    private Order creatOrder(ResultSet rs, LocalDate date) throws SQLException {
+        int orderNumber = rs.getInt("OrderNumber");
+        String customerName = rs.getString("CustomerName");
+        String state = rs.getString("State");
+        String stateName = rs.getString("StateName");
+        BigDecimal taxRate = rs.getBigDecimal("TaxRate");
+        String productType = rs.getString("ProductType");
+        BigDecimal costPerSquareFoot = rs.getBigDecimal("CostPerSquareFoot");
+        BigDecimal laborCostPerSquareFoot = rs.getBigDecimal("LaborCostPerSquareFoot");
+        BigDecimal area = rs.getBigDecimal("Area");
+
+        Tax t = new Tax(state,stateName,taxRate);
+        Product p = new Product(productType,costPerSquareFoot,laborCostPerSquareFoot);
+
+        return new Order(date,orderNumber,customerName,t,p,area);
     }
 
     @Override
@@ -97,27 +123,13 @@ public class JdbcDao implements Dao{
                         "WHERE o.date = ?";
         List<Order> orders = new ArrayList<>();
 
-
         try {
             PreparedStatement stmt = con.prepareStatement(query);
             stmt.setDate(1, Date.valueOf(date));
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                int orderNumber = rs.getInt("OrderNumber");
-                String customerName = rs.getString("CustomerName");
-                String state = rs.getString("State");
-                String stateName = rs.getString("StateName");
-                BigDecimal taxRate = rs.getBigDecimal("TaxRate");
-                String productType = rs.getString("ProductType");
-                BigDecimal costPerSquareFoot = rs.getBigDecimal("CostPerSquareFoot");
-                BigDecimal laborCostPerSquareFoot = rs.getBigDecimal("LaborCostPerSquareFoot");
-                BigDecimal area = rs.getBigDecimal("Area");
-
-                Tax t = new Tax(state,stateName,taxRate);
-                Product p = new Product(productType,costPerSquareFoot,laborCostPerSquareFoot);
-
-                orders.add(new Order(date,orderNumber,customerName,t,p,area));
+                orders.add(creatOrder(rs, date));
             }
 
         } catch (SQLException e) {
@@ -196,19 +208,7 @@ public class JdbcDao implements Dao{
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String customerName = rs.getString("CustomerName");
-                String state = rs.getString("State");
-                String stateName = rs.getString("StateName");
-                BigDecimal taxRate = rs.getBigDecimal("TaxRate");
-                String productType = rs.getString("ProductType");
-                BigDecimal costPerSquareFoot = rs.getBigDecimal("CostPerSquareFoot");
-                BigDecimal laborCostPerSquareFoot = rs.getBigDecimal("LaborCostPerSquareFoot");
-                BigDecimal area = rs.getBigDecimal("Area");
-
-                Tax t = new Tax(state,stateName,taxRate);
-                Product p = new Product(productType,costPerSquareFoot,laborCostPerSquareFoot);
-
-                o = new Order(date,orderNumber,customerName,t,p,area);
+                o = creatOrder(rs, date);
 
             }
 
@@ -274,7 +274,8 @@ public class JdbcDao implements Dao{
 
 
             int rs = stmt.executeUpdate();
-            assert rs <= 1;
+
+            assert rs <= 1: "replaced more than one order";
             if(rs == 0){throw new NoSuchOrder();}
 
         } catch (SQLException e) {
@@ -295,7 +296,7 @@ public class JdbcDao implements Dao{
 
 
             int rs = stmt.executeUpdate();
-            assert rs <= 1;
+            assert rs <= 1: "deleted more than one order";
 
 
         } catch (SQLException e) {

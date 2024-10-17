@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
+/**
+ * the view component
+ * allows the controller to communicate with the user
+ */
 @Component
 public class ConsoleVeiw implements Veiw {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -33,6 +37,11 @@ public class ConsoleVeiw implements Veiw {
         return scanner.next();
     }
 
+    /**
+     * checks if a date can be parsed
+     * @param d the date
+     * @return the parsed date or null if not able to parse
+     */
     private LocalDate parseableDate(String d){
         try{
             return LocalDate.parse(d, formatter);

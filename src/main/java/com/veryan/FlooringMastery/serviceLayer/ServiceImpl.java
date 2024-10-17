@@ -14,10 +14,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * an implementation of service
+ * it allows communication between the dao and the controller, and contains the business logic of the program
+ */
 @Service
 public class ServiceImpl implements com.veryan.FlooringMastery.serviceLayer.Service {
     private final Dao dao;
 
+    /**
+     * the constructor for the service (used by Spring)
+     * @param dataAccessObject the dao to communicate with the data
+     */
     @Autowired
     public ServiceImpl(Dao dataAccessObject) {
         this.dao = dataAccessObject;
@@ -46,14 +54,14 @@ public class ServiceImpl implements com.veryan.FlooringMastery.serviceLayer.Serv
     }
 
     @Override
-    public Order getOrder(LocalDate date, int orderNumber) throws NoSuchOrder {
-        if (date == null || orderNumber < 0){throw new NoSuchOrder("invalid date or orderNumber");}
+    public Order getOrder(LocalDate date, int orderNumber) throws InvalidInput, NoSuchOrder {
+        if (date == null || orderNumber < 0){throw new InvalidInput("invalid date or orderNumber");}
         return dao.getOrder(date, orderNumber);
     }
 
     @Override
     public void replaceOrder(Order oldOrder, Order newOrder) throws NoSuchOrder, InvalidInput {
-        if(!oldOrder.date.equals(newOrder.date)){
+        if(!oldOrder.date.equals(newOrder.date) || oldOrder.orderNumber != newOrder.orderNumber){
             throw new InvalidInput("cant replace orders with different dates or orderNumbers");
         }
 
@@ -61,7 +69,9 @@ public class ServiceImpl implements com.veryan.FlooringMastery.serviceLayer.Serv
 
     }
 
+    @Override
     public Order initliseOrder(Order order) throws InvalidInput {
+        //TODO: Customer Name – May not be blank and is limited to characters [a-z][0-9] as well as periods and comma characters.
         if(order.date == null || order.date.isBefore(LocalDate.now())){
             throw new InvalidInput("invalid date");
         }else if(order.area.doubleValue() < 100){
@@ -86,7 +96,7 @@ public class ServiceImpl implements com.veryan.FlooringMastery.serviceLayer.Serv
     @Override
     public void exportData() {
         try {
-            dao.saveData();
+            dao.saveAndClose();
         } catch (DaoException e) {
             System.out.println("failed to save");
         }

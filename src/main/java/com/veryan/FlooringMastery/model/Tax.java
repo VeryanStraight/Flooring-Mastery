@@ -3,11 +3,33 @@ package com.veryan.FlooringMastery.model;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Tax implements model{
+/**
+ * the model for the tax
+ */
+public class Tax{
+    /**the state code*/
     public final String state;
+    /**the state name*/
     public final String stateName;
+    /**the tax rate*/
     public BigDecimal taxRate = BigDecimal.ZERO; //might want to make private because it can be changed
 
+    /**
+     * the constructor for the tax
+     * @param state the state
+     * @param stateName the state name
+     * @param taxRate the tax rate
+     */
+    public Tax(String state, String stateName, BigDecimal taxRate) {
+        this.state = state;
+        this.stateName = stateName;
+        this.taxRate = taxRate;
+    }
+
+    /**
+     * a constructor for a temporary tax object (when only state is known)
+     * @param state the state
+     */
     public Tax(String state){
         this.state = state;
         this.stateName = "";
@@ -26,18 +48,6 @@ public class Tax implements model{
         return Objects.hash(state, stateName, taxRate);
     }
 
-    public Tax(String state, String stateName, BigDecimal taxRate) {
-        this.state = state;
-        this.stateName = stateName;
-        this.taxRate = taxRate;
-    }
-
-    @Override
-    public String toCSV() {
-        return state +
-                "," + stateName +
-                "," + taxRate;
-    }
 
     @Override
     public String toString() {
