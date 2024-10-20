@@ -14,6 +14,13 @@ import java.util.Map;
  * it defines how the service can interact with the data
  */
 public interface Dao {
+
+    /**
+     * checks that the data has been loaded correctly
+     * @return if the data has been loaded
+     */
+    boolean loadedData();
+
     /**
      * a method to ensure all data is saved before the program ends
      * @throws DaoException if something goes wrong with saving and closing

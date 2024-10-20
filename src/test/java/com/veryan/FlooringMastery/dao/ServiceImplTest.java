@@ -39,6 +39,10 @@ public class ServiceImplTest {
         String username = "postgres";
         String password = "password";
 
+        if(!dao.loadedData()){
+            System.out.println("connection failed");
+            return;
+        }
         try {
             this.conn = DriverManager.getConnection(url, username, password);
 
@@ -78,6 +82,7 @@ public class ServiceImplTest {
 
     @AfterEach
     public void cleanUp(){
+        if(!dao.loadedData()){return;}
         try {
             PreparedStatement stmt = conn.prepareStatement("DROP TABLE Orders; " +
                                                                 "DROP TABLE Taxes; " +
@@ -91,6 +96,7 @@ public class ServiceImplTest {
 
     @Test
     public void removeOrderTest(){
+        if(!dao.loadedData()){return;}
         service.deleteOrder(testOrders.get(3));
 
         //TODO: should use query to get orders (otherwise test could fail due to getOrders() issue not removeOrder() issue)

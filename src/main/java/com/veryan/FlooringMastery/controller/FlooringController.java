@@ -40,6 +40,10 @@ public class FlooringController {
      * method that runs the app
      */
     public void run() {
+        if(!service.loadedData()){
+            veiw.userMessage("Error loading data");
+            running = false;
+        }
         while (running) {
 
             //check if we should repeat a option or go back to menu

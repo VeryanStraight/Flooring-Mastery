@@ -12,6 +12,11 @@ import java.util.Set;
  */
 public interface Service {
     /**
+     * checks the data has been loaded
+     * @return weather the data has been loaded
+     */
+    boolean loadedData();
+    /**
      * gets the orders belonging to a specific date
      * @param date the date
      * @return the list of orders

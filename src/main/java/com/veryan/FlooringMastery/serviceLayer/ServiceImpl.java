@@ -32,6 +32,11 @@ public class ServiceImpl implements com.veryan.FlooringMastery.serviceLayer.Serv
     }
 
     @Override
+    public boolean loadedData() {
+        return dao.loadedData();
+    }
+
+    @Override
     public List<Order> getOrders(LocalDate date) throws NoSuchOrder{
         List<Order> li = dao.getOrders(date);
         if(li.isEmpty()){throw new NoSuchOrder();}

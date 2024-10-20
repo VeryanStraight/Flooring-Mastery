@@ -35,12 +35,17 @@ public class JdbcDao implements Dao{
 
         try {
             connection = DriverManager.getConnection(url, username, password);
-        } catch (SQLException e) {
-            //TODO: handle this better
-            e.printStackTrace();
+        } catch (SQLException ignored) {
+            //TODO: add logging
         }
         return connection;
     }
+
+    @Override
+    public boolean loadedData(){
+        return con != null;
+    }
+
 
     /**
      * constructor (for Spring to use)

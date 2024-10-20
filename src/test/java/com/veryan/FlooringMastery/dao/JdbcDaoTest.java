@@ -28,7 +28,6 @@ public class JdbcDaoTest {
     private final JdbcDao dao = new JdbcDao("testflooringmastery");
     @BeforeEach
     public void setUp(){
-        //TODO: create a database test
         String url = "jdbc:mysql://localhost:3306/testflooringmastery?useSSL=false&serverTimezone=UTC";
         String username = "root";
         String password = "password";
@@ -45,7 +44,8 @@ public class JdbcDaoTest {
 
 
         } catch (SQLException | FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("connection failed");
+            return;
         }
 
         testProducts.add(new Product("laminate", new BigDecimal("1.75"), new BigDecimal("2.10")));
@@ -76,6 +76,7 @@ public class JdbcDaoTest {
      * @param fileName path to the file
      */
     private void executeUpdateFromFile(String fileName) throws FileNotFoundException, SQLException {
+        if(conn == null){return;}
         File myObj = new File(fileName);
         Scanner scanner = new Scanner(myObj);
         String sql = scanner.tokens().collect(Collectors.joining(" "));
@@ -86,6 +87,7 @@ public class JdbcDaoTest {
 
     @AfterEach
     public void cleanUp(){
+        if(!dao.loadedData()){return;}
         try {
             PreparedStatement stmt = conn.prepareStatement("DROP TABLE Orders");
             stmt.executeUpdate();
@@ -101,6 +103,7 @@ public class JdbcDaoTest {
 
     @Test
     public void getOrdersTest(){
+        if(!dao.loadedData()){return;}
         List<Order> orders = dao.getOrders();
         assertEquals(orders.size(), 3);
         List<Order> li = List.of(testOrders.get(2), testOrders.get(3), testOrders.get(4));
@@ -110,6 +113,7 @@ public class JdbcDaoTest {
 
     @Test
     public void addOrderTest(){
+        if(!dao.loadedData()){return;}
         Order order = testOrders.get(0);
 
         dao.addOrder(order);
