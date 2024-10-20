@@ -35,6 +35,20 @@ public class JdbcDao implements Dao{
 
         try {
             connection = DriverManager.getConnection(url, username, password);
+
+            PreparedStatement query = connection.prepareStatement("SHOW TABLES");
+            ResultSet rs = query.executeQuery();
+
+            List<String> tables = new ArrayList<>();
+
+            while (rs.next()){
+                tables.add(rs.getString(1));
+            }
+
+            if(!tables.contains("orders") || !tables.contains("taxes") || !tables.contains("products")){
+                return null;
+            }
+
         } catch (SQLException ignored) {
             //TODO: add logging
         }
